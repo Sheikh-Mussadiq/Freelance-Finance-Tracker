@@ -265,8 +265,13 @@ export const createExpense = async (expense) => {
   if (!user) throw new Error("User not authenticated");
 
   // Handle recurring expense
-  const { isRecurring, recurrencePattern, recurrenceEndDate, ...expenseData } =
-    expense;
+  const {
+    isRecurring,
+    recurrencePattern,
+    recurrenceEndDate,
+    account,
+    ...expenseData
+  } = expense;
 
   const timestamp = new Date().toISOString();
 
@@ -278,7 +283,7 @@ export const createExpense = async (expense) => {
       recurrence_pattern: recurrencePattern,
       recurrence_end_date: recurrenceEndDate,
       user_id: user.id,
-      account_name: expense.account,
+      account_name: account,
       created_at: timestamp,
     })
     .select()
@@ -288,8 +293,13 @@ export const createExpense = async (expense) => {
 
 export const updateExpense = async (id, updates) => {
   // Handle recurring expense fields
-  const { isRecurring, recurrencePattern, recurrenceEndDate, ...updateData } =
-    updates;
+  const {
+    isRecurring,
+    recurrencePattern,
+    recurrenceEndDate,
+    account,
+    ...updateData
+  } = updates;
 
   const { data, error } = await supabase
     .from("expenses")
@@ -298,6 +308,7 @@ export const updateExpense = async (id, updates) => {
       is_recurring: isRecurring,
       recurrence_pattern: recurrencePattern,
       recurrence_end_date: recurrenceEndDate,
+      account_name: account,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id)
