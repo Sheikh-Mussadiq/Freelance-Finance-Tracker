@@ -1,17 +1,28 @@
 import React from 'react'
-import { MenuIcon } from '../icons/Icons'
+import { useLocation } from 'react-router-dom'
 
-const Header = ({ toggleSidebar }) => {
+const Header = () => {
+  const location = useLocation();
+  
+  // Get page title based on current route
+  const getPageTitle = () => {
+    const path = location.pathname;
+    if (path === '/') return 'Dashboard';
+    if (path.startsWith('/projects')) return 'Projects';
+    if (path.startsWith('/expenses')) return 'Expenses';
+    if (path.startsWith('/accounts')) return 'Accounts';
+    if (path.startsWith('/settings')) return 'Settings';
+    return 'FinanceTrack';
+  };
+  
   return (
-    <div className="lg:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 flex items-center">
-      <button
-        onClick={toggleSidebar}
-        className="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 focus:outline-none"
-      >
-        <span className="sr-only">Open sidebar</span>
-        <MenuIcon />
-      </button>
-      <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400 ml-2">FinanceTrack</h1>
+    <div className="lg:hidden px-4 py-3 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+      <div>
+        <h1 className="text-lg font-bold text-gray-900 dark:text-white">{getPageTitle()}</h1>
+      </div>
+      <div>
+        <h2 className="text-sm font-medium text-primary-600 dark:text-primary-400">FinanceTrack</h2>
+      </div>
     </div>
   )
 }

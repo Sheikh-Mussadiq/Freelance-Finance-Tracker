@@ -52,12 +52,12 @@ const Sidebar = ({ isMobile, isOpen, onClose, darkMode, toggleDarkMode }) => {
     <motion.aside
       className={`${
         isMobile ? "fixed inset-y-0 left-0 z-30" : "flex-shrink-0"
-      } w-64 bg-white dark:bg-gray-800 shadow-lg flex flex-col`}
+      } w-64 h-screen bg-white dark:bg-gray-800 shadow-lg flex flex-col`}
       initial={isMobile ? "closed" : "open"}
       animate={isMobile ? (isOpen ? "open" : "closed") : "open"}
       variants={isMobile ? sidebarVariants : {}}
     >
-      <div className="h-full flex flex-col">
+      <div className="h-screen flex flex-col">
         <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-700">
           <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">
             FinanceTrack
