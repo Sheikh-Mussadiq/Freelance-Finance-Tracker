@@ -95,57 +95,6 @@ export const DataProvider = ({ children }) => {
   const [budgets, setBudgets] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const mockExpenses = [
-    {
-      id: uuidv4(),
-      name: "Adobe Creative Cloud",
-      amount: 52.99,
-      date: "2025-01-05",
-      category: "Software",
-      account: "Business Credit Card",
-    },
-    {
-      id: uuidv4(),
-      name: "Office Supplies",
-      amount: 125.75,
-      date: "2025-01-12",
-      category: "Office",
-      account: "Checking Account",
-    },
-    {
-      id: uuidv4(),
-      name: "Web Hosting",
-      amount: 15.99,
-      date: "2025-01-07",
-      category: "Hosting",
-      account: "Business Credit Card",
-    },
-  ];
-
-  const mockAccounts = [
-    {
-      id: uuidv4(),
-      name: "Business Checking",
-      balance: 5800.25,
-      type: "Checking",
-      lastUpdated: "2025-01-15",
-    },
-    {
-      id: uuidv4(),
-      name: "Business Savings",
-      balance: 12500.0,
-      type: "Savings",
-      lastUpdated: "2025-01-15",
-    },
-    {
-      id: uuidv4(),
-      name: "Business Credit Card",
-      balance: -1245.74,
-      type: "Credit",
-      lastUpdated: "2025-01-15",
-    },
-  ];
-
   // Fetch all data
   const fetchData = useCallback(async () => {
     if (!user) {
@@ -201,17 +150,23 @@ export const DataProvider = ({ children }) => {
       console.log("Adding project:", project);
       console.log("Current user:", user);
 
-      const { data, error } = await api.createProject({
-        ...project,
-        user_id: user.id,
-      });
+      try {
+        const { data, error } = await api.createProject({
+          ...project,
+          user_id: user.id,
+        });
 
-      console.log("API response data:", data);
-      console.log("API response error:", error);
+        console.log("API response data:", data);
+        console.log("API response error:", error);
 
-      if (error) throw error;
-      setProjects([data, ...projects]);
-      return { data, error: null };
+        if (error) throw error;
+        setProjects([data, ...projects]);
+        return { data, error: null };
+      } catch (error) {
+        console.error("Error adding project:", error);
+        alert("Error adding project: " + error.message);
+        return { data: null, error };
+      }
     } catch (error) {
       console.error("Error adding project:", error);
       alert("Error adding project: " + error.message);
@@ -220,6 +175,7 @@ export const DataProvider = ({ children }) => {
   };
 
   const updateProject = async (updatedProject) => {
+    console.log("Updating project:", updatedProject);
     try {
       const { data, error } = await api.updateProject(
         updatedProject.id,
@@ -512,6 +468,7 @@ export const DataProvider = ({ children }) => {
     updateProject,
     deleteProject,
     addPayment,
+    updateHours,
     addExpense,
     updateExpense,
     deleteExpense,

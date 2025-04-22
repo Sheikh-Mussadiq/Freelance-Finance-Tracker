@@ -102,11 +102,8 @@ export const createProject = async (project) => {
       };
     }
 
-    // Ensure status matches the database enum format
-    let status = project.status;
-    if (status === "in-progress") {
-      status = "in_progress"; // Convert to database format
-    }
+    // Use status as-is (must match DB enum format)
+    const status = project.status;
 
     // Convert camelCase to snake_case for database fields
     const projectData = {
@@ -169,7 +166,7 @@ export const updateProject = async (id, updates) => {
     const dbUpdates = {
       name: updates.name,
       client: updates.client,
-      status: updates.status === "in-progress" ? "in_progress" : updates.status,
+      status: updates.status,
       start_date: updates.startDate,
       end_date: updates.endDate,
       contract_type: updates.contractType,

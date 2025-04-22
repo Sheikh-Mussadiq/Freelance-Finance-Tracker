@@ -8,6 +8,7 @@ import ProjectFormModal from "../components/project/ProjectFormModal";
 import ProjectList from "../components/project/ProjectList";
 import { AddIcon, FilterIcon } from "../components/icons/Icons";
 import { useSearchParams } from "react-router-dom";
+import { TableShimmer } from "../components/ui/Shimmer";
 
 const cardVariants = {
   initial: { opacity: 0, y: 20 },
@@ -15,7 +16,7 @@ const cardVariants = {
 };
 
 const Projects = () => {
-  const { projects, addProject } = useData();
+  const { projects, addProject, loading } = useData();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchParams] = useSearchParams();
@@ -103,7 +104,11 @@ const Projects = () => {
         </div>
 
         <div className="project-list">
-          <ProjectList projects={projects} searchTerm={searchTerm} />
+          {loading ? (
+            <TableShimmer rows={5} columns={8} widths={[15, 15, 15, 10, 15, 15, 15, 10]} showHeader={true} />
+          ) : (
+            <ProjectList projects={projects} searchTerm={searchTerm} />
+          )}
         </div>
       </div>
 

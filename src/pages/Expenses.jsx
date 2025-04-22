@@ -8,6 +8,7 @@ import RecurringExpenseModal from "../components/expense/RecurringExpenseModal";
 import BudgetModal from "../components/budget/BudgetModal";
 import BudgetProgressBar from "../components/budget/BudgetProgressBar";
 import FilterModal from "../components/expense/FilterModal";
+import { CardShimmer, TableShimmer, Shimmer } from "../components/ui/Shimmer";
 
 // Animation variants
 const tableVariants = {
@@ -55,6 +56,7 @@ const Expenses = () => {
     updateBudget,
     deleteBudget,
     getBudgetProgress,
+    loading,
   } = useData();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -370,9 +372,6 @@ const Expenses = () => {
               ? formatCurrency(totalAll / expenses.length)
               : formatCurrency(0)}
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Average per expense
-          </p>
         </motion.div>
 
         <motion.div
@@ -394,34 +393,43 @@ const Expenses = () => {
             </button>
           </div>
           <div className="space-y-4">
-            {budgets.length > 0 ? (
-              budgets.map((budget) => {
-                const progress = getBudgetProgress(
-                  budget.category,
-                  budget.period
-                );
-                return (
-                  <div key={budget.id} className="space-y-1">
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {budget.category}
-                      </span>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {budget.period}
-                      </span>
-                    </div>
-                    <BudgetProgressBar
-                      spent={progress?.spent || 0}
-                      budget={budget.amount}
-                      showLabels={false}
-                    />
-                  </div>
-                );
-              })
+            {loading ? (
+              // Shimmer loading state for budget cards
+              <>
+                <CardShimmer />
+                <CardShimmer />
+                <CardShimmer />
+              </>
             ) : (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                No budgets set
-              </p>
+              budgets.length > 0 ? (
+                budgets.map((budget) => {
+                  const progress = getBudgetProgress(
+                    budget.category,
+                    budget.period
+                  );
+                  return (
+                    <div key={budget.id} className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {budget.category}
+                        </span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {budget.period}
+                        </span>
+                      </div>
+                      <BudgetProgressBar
+                        spent={progress?.spent || 0}
+                        budget={budget.amount}
+                        showLabels={false}
+                      />
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  No budgets set
+                </p>
+              )
             )}
           </div>
         </motion.div>
@@ -457,14 +465,18 @@ const Expenses = () => {
           </button>
         </div>
 
-        <ExpenseList
-          expenses={filteredExpenses}
-          onEdit={openEditModal}
-          onDelete={handleDeleteExpense}
-          onRecurring={openRecurringModal}
-          formatCurrency={formatCurrency}
-          openAddModal={openAddModal}
-        />
+        {loading ? (
+          <TableShimmer rows={6} columns={6} widths={[25, 15, 15, 15, 15, 15]} />
+        ) : (
+          <ExpenseList
+            expenses={filteredExpenses}
+            onEdit={openEditModal}
+            onDelete={handleDeleteExpense}
+            onRecurring={openRecurringModal}
+            formatCurrency={formatCurrency}
+            openAddModal={openAddModal}
+          />
+        )}
       </div>
 
       {/* Expense by category section */}

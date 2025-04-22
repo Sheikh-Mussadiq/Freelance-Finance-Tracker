@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useData } from '../context/DataContext'
 import { format } from 'date-fns'
+import { CardShimmer, TableShimmer } from '../components/ui/Shimmer'
 
 // Icon components
 const MoneyIcon = () => (
@@ -42,7 +43,7 @@ const cardVariants = {
 }
 
 const Dashboard = () => {
-  const { projects, expenses, accounts, getStats } = useData()
+  const { projects, expenses, accounts, getStats, loading } = useData()
   const stats = getStats()
   
   // Format currency
@@ -75,92 +76,103 @@ const Dashboard = () => {
 
       {/* Stats section */}
       <section className="dashboard-stats grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <motion.div 
-          className="card bg-white dark:bg-gray-800 border border-green-100 dark:border-green-900"
-          variants={cardVariants}
-          initial="initial"
-          animate="animate"
-          custom={0}
-        >
-          <div className="flex items-center">
-            <div className="flex-shrink-0 p-3 rounded-md bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-100">
-              <MoneyIcon />
-            </div>
-            <div className="ml-4">
-              <h2 className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Earned</h2>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
-                {formatCurrency(stats.totalEarned)}
-              </p>
-            </div>
-          </div>
-        </motion.div>
+        {loading ? (
+          // Shimmer loading state for stats cards
+          <>
+            <CardShimmer />
+            <CardShimmer />
+            <CardShimmer />
+            <CardShimmer />
+          </>
+        ) : (
+          <>
+            <motion.div 
+              className="card bg-white dark:bg-gray-800 border border-green-100 dark:border-green-900"
+              variants={cardVariants}
+              initial="initial"
+              animate="animate"
+              custom={0}
+            >
+              <div className="flex items-center">
+                <div className="flex-shrink-0 p-3 rounded-md bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-100">
+                  <MoneyIcon />
+                </div>
+                <div className="ml-4">
+                  <h2 className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Earned</h2>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    {formatCurrency(stats.totalEarned)}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
-        <motion.div 
-          className="card bg-white dark:bg-gray-800 border border-blue-100 dark:border-blue-900"
-          variants={cardVariants}
-          initial="initial"
-          animate="animate"
-          custom={1}
-        >
-          <div className="flex items-center">
-            <div className="flex-shrink-0 p-3 rounded-md bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-100">
-              <PendingIcon />
-            </div>
-            <div className="ml-4">
-              <h2 className="text-sm font-medium text-gray-600 dark:text-gray-400">Pending Payments</h2>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
-                {formatCurrency(stats.totalPending)}
-              </p>
-            </div>
-          </div>
-        </motion.div>
+            <motion.div 
+              className="card bg-white dark:bg-gray-800 border border-blue-100 dark:border-blue-900"
+              variants={cardVariants}
+              initial="initial"
+              animate="animate"
+              custom={1}
+            >
+              <div className="flex items-center">
+                <div className="flex-shrink-0 p-3 rounded-md bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-100">
+                  <PendingIcon />
+                </div>
+                <div className="ml-4">
+                  <h2 className="text-sm font-medium text-gray-600 dark:text-gray-400">Pending Payments</h2>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    {formatCurrency(stats.totalPending)}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
-        <motion.div 
-          className="card bg-white dark:bg-gray-800 border border-red-100 dark:border-red-900"
-          variants={cardVariants}
-          initial="initial"
-          animate="animate"
-          custom={2}
-        >
-          <div className="flex items-center">
-            <div className="flex-shrink-0 p-3 rounded-md bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-100">
-              <ExpenseIcon />
-            </div>
-            <div className="ml-4">
-              <h2 className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Expenses</h2>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
-                {formatCurrency(stats.totalExpenses)}
-              </p>
-            </div>
-          </div>
-        </motion.div>
+            <motion.div 
+              className="card bg-white dark:bg-gray-800 border border-red-100 dark:border-red-900"
+              variants={cardVariants}
+              initial="initial"
+              animate="animate"
+              custom={2}
+            >
+              <div className="flex items-center">
+                <div className="flex-shrink-0 p-3 rounded-md bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-100">
+                  <ExpenseIcon />
+                </div>
+                <div className="ml-4">
+                  <h2 className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Expenses</h2>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    {formatCurrency(stats.totalExpenses)}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
-        <motion.div 
-          className="card bg-white dark:bg-gray-800 border border-purple-100 dark:border-purple-900"
-          variants={cardVariants}
-          initial="initial"
-          animate="animate"
-          custom={3}
-        >
-          <div className="flex items-center">
-            <div className="flex-shrink-0 p-3 rounded-md bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-100">
-              <NetIcon />
-            </div>
-            <div className="ml-4">
-              <h2 className="text-sm font-medium text-gray-600 dark:text-gray-400">Net Balance</h2>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
-                {formatCurrency(stats.netBalance)}
-              </p>
-            </div>
-          </div>
-        </motion.div>
+            <motion.div 
+              className="card bg-white dark:bg-gray-800 border border-purple-100 dark:border-purple-900"
+              variants={cardVariants}
+              initial="initial"
+              animate="animate"
+              custom={3}
+            >
+              <div className="flex items-center">
+                <div className="flex-shrink-0 p-3 rounded-md bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-100">
+                  <NetIcon />
+                </div>
+                <div className="ml-4">
+                  <h2 className="text-sm font-medium text-gray-600 dark:text-gray-400">Net Balance</h2>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    {formatCurrency(stats.netBalance)}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
       </section>
 
       {/* Content section */}
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {/* Active Projects */}
         <motion.div
-          className="recent-projects" 
           className="card overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -168,25 +180,29 @@ const Dashboard = () => {
         >
           <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Recent Projects</h2>
           
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Project
-                  </th>
-                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Client
-                  </th>
-                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Balance
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          {loading ? (
+            // Shimmer loading state for projects table
+            <TableShimmer rows={3} columns={4} widths={[30, 20, 20, 30]} />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      Project
+                    </th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      Client
+                    </th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      Balance
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {recentProjects.length > 0 ? (
                   recentProjects.map((project) => (
                     <tr key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -226,14 +242,14 @@ const Dashboard = () => {
                     </td>
                   </tr>
                 )}
-              </tbody>
-            </table>
-          </div>
+                </tbody>
+              </table>
+            </div>
+          )}
         </motion.div>
 
         {/* Recent Expenses */}
         <motion.div
-          className="recent-expenses" 
           className="card overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -241,25 +257,26 @@ const Dashboard = () => {
         >
           <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Recent Expenses</h2>
           
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Category
-                  </th>
-                  <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Amount
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          {loading ? (
+            // Shimmer loading state for expenses table
+            <TableShimmer rows={5} columns={3} widths={[40, 30, 30]} />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      Description
+                    </th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {recentExpenses.length > 0 ? (
                   recentExpenses.map((expense) => (
                     <tr key={expense.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -269,9 +286,6 @@ const Dashboard = () => {
                       <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {expense.date ? format(new Date(expense.date), 'MMM d, yyyy') : 'Not set'}
                       </td>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {expense.category}
-                      </td>
                       <td className="px-3 py-4 whitespace-nowrap text-sm text-right font-medium text-red-600 dark:text-red-400">
                         {formatCurrency(expense.amount)}
                       </td>
@@ -279,14 +293,15 @@ const Dashboard = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="px-3 py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+                    <td colSpan="3" className="px-3 py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
                       No expenses found
                     </td>
                   </tr>
                 )}
-              </tbody>
-            </table>
-          </div>
+                </tbody>
+              </table>
+            </div>
+          )}
         </motion.div>
       </section>
 

@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { useData } from "../context/DataContext";
 import EmptyState from "../components/ui/EmptyState";
 import { AccountsEmptyIcon } from "../components/icons/EmptyStateIcons";
+import { CardShimmer, Shimmer } from "../components/ui/Shimmer";
 
 // Icon components
 const AddIcon = () => (
@@ -109,7 +110,7 @@ const cardVariants = {
 };
 
 const Accounts = () => {
-  const { accounts, addAccount, updateAccount, deleteAccount } = useData();
+  const { accounts, addAccount, updateAccount, deleteAccount, loading } = useData();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentAccount, setCurrentAccount] = useState(null);
   const [formData, setFormData] = useState({
@@ -294,8 +295,18 @@ const Accounts = () => {
       </div>
 
       {/* Accounts list */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {accounts.length === 0 ? (
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {loading ? (
+          // Shimmer loading state for account cards
+          <>
+            <CardShimmer />
+            <CardShimmer />
+            <CardShimmer />
+            <CardShimmer />
+            <CardShimmer />
+            <CardShimmer />
+          </>
+        ) : accounts.length === 0 ? (
           <div className="col-span-full">
             <EmptyState
               icon={AccountsEmptyIcon}

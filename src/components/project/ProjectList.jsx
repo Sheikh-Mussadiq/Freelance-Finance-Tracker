@@ -27,7 +27,7 @@ const tableVariants = {
 };
 
 const ProjectList = ({ projects, searchTerm }) => {
-  const { updateProject, deleteProject, addPayment, updateHours } = useData();
+  const { addProject, updateProject, deleteProject, addPayment, updateHours } = useData();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -111,6 +111,11 @@ const ProjectList = ({ projects, searchTerm }) => {
         ...projectData,
       });
     }
+    closeModal();
+  };
+
+  const handleAddProject = (projectData) => {
+    addProject(projectData);
     closeModal();
   };
 
@@ -351,7 +356,7 @@ const ProjectList = ({ projects, searchTerm }) => {
         isOpen={isAddModalOpen}
         onClose={closeModal}
         currentProject={null}
-        onSubmit={handleProjectUpdate}
+        onSubmit={handleAddProject}
       />
 
       {/* Payment Modal */}
